@@ -1,4 +1,4 @@
-import { Business, Handyman, Home, Person } from '@mui/icons-material';
+import { FileUpload, Handyman, Home, Person } from '@mui/icons-material';
 
 export interface IMenuOption {
     title:  string;
@@ -23,6 +23,12 @@ export const menu: IMenu = {
         },
     ],
     adminOptions: [
+        {
+            title: 'Importar CSV',
+            href: '/importar-csv',
+            name: 'csv',
+            icon: FileUpload,
+        },        
         {
             title: 'Usuários',
             href: '/usuarios',
