@@ -21,6 +21,12 @@ export const menu: IMenu = {
             name: '/',
             icon: Home,
         },
+        {
+            title: 'Relatórios',
+            href: '/relatorios',
+            name: 'relatorios',
+            icon: Handyman,
+        }
     ],
     adminOptions: [
         {
