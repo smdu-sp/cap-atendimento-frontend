@@ -1,4 +1,5 @@
-import { FileUpload, Handyman, Home, Person } from '@mui/icons-material';
+import { FileUpload, ListAlt, CalendarMonth, Home, Person } from '@mui/icons-material';
+import { List } from '@mui/material';
 
 export interface IMenuOption {
     title:  string;
@@ -22,10 +23,16 @@ export const menu: IMenu = {
             icon: Home,
         },
         {
-            title: 'Relatórios',
-            href: '/relatorios',
-            name: 'relatorios',
-            icon: Handyman,
+            title: 'Agendamentos por Ano',
+            href: '/agendamentos-por-ano',
+            name: 'agendamentos-por-ano',
+            icon: CalendarMonth,
+        },
+        {
+            title: 'Lista de Agendamentos',
+            href: '/lista-de-agendamentos',
+            name: 'lista-de-agendamentos',
+            icon: ListAlt,
         }
     ],
     adminOptions: [
