@@ -1,7 +1,7 @@
 import * as React from "react";
 import Table from "@mui/joy/Table";
 import { Box, Typography, Card } from "@mui/joy";
-import { getAgendamentosPorAno } from "@/shared/services/upload.services";
+import { getAgendamentosPorAno } from "@/shared/services/agendamentos.services";
 
 export default function TabelaAno({ ano }: { ano: number }) {
   const [dados, setDados] = React.useState<

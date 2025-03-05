@@ -9,7 +9,7 @@ import { Container } from "@mui/joy";
 import axios from "axios";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/shared/auth/authOptions";
-import { upload } from "@/shared/services/upload.services";
+import { upload } from "@/shared/services/agendamentos.services";
 
 const FileUploadPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

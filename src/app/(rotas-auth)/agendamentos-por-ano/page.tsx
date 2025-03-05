@@ -19,7 +19,7 @@ export default function RelatorioPorAno() {
         const data = await getAnos();
         setAnos(data);
         if (data.length > 0) {
-          setAnoSelecionado(data[0]); // Define o primeiro ano como padrão
+          setAnoSelecionado(data[0]); 
         }
       } catch (error) {
         console.error("Erro ao buscar anos:", error);
@@ -31,8 +31,7 @@ export default function RelatorioPorAno() {
 
   return (
     <Box sx={{ display: "flex", minHeight: "100dvh" }}>
-      <Content titulo="Relatórios">
-        {/* Botão para download */}
+      <Content titulo="Agendamentos por Ano">        
         <Box
           sx={{
             display: "flex",
@@ -43,9 +42,7 @@ export default function RelatorioPorAno() {
           <Button color="primary" size="sm" startDecorator={<DownloadRoundedIcon />}>
             Download PDF
           </Button>
-        </Box>
-
-        {/* Seletor de Ano */}
+        </Box>    
         <Box sx={{ mb: 2, display: "flex", justifyContent: "center" }}>
           <FormControl size="sm">
             <FormLabel>Selecione o ano:</FormLabel>
@@ -61,9 +58,7 @@ export default function RelatorioPorAno() {
               ))}
             </Select>
           </FormControl>
-        </Box>
-
-        {/* Tabela de Agendamentos para o ano selecionado */}
+        </Box>        
         {anoSelecionado && <TabelaAno ano={parseInt(anoSelecionado, 10)} />}
       </Content>
     </Box>

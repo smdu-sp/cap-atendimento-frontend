@@ -59,6 +59,44 @@ async function upload(formData: FormData) {
     console.error("Erro na requisição:", error);
     return { coordenadorias: [], totalAno: 0 };
   }
+
 }
 
-export { upload, getAgendamentosPorAno };
+async function getListaAgendamentos(datainicio: Date, datafim: Date) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    Logout();
+    return [];
+  }
+
+  try {
+    const response = await fetch(
+      `${baseURL}agendamentos/lista-de-agendamentos?dataInicio=${datainicio}&dataFim=${datafim}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 401) {
+      Logout();
+      return [];
+    }
+
+    if (!response.ok) {
+      console.error("Erro ao buscar agendamentos:", await response.text());
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+    return [];
+  }
+}
+
+export { upload, getAgendamentosPorAno, getListaAgendamentos};
