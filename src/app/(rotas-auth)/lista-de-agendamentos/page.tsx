@@ -8,9 +8,10 @@ import { Box, Button, FormControl } from "@mui/joy";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import TextField from "@mui/material/TextField"; 
+import TextField from "@mui/material/TextField";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import { Today } from "@mui/icons-material";
+import * as XLSX from "xlsx"; 
+import ptBR from "date-fns/locale/pt-BR";
 
 export default function ListaDeAgendamentos() {
   const [agendamentos, setAgendamentos] = useState<any[]>([]);
@@ -18,8 +19,9 @@ export default function ListaDeAgendamentos() {
   const [dataInicio, setDataInicio] = useState<Date | null>(new Date());
   const [dataFim, setDataFim] = useState<Date | null>(new Date());
 
+
+
   useEffect(() => {
-   
     const fetchData = async () => {
       try {
         if (dataInicio && dataFim) {
@@ -34,10 +36,33 @@ export default function ListaDeAgendamentos() {
     };
 
     fetchData();
-  }, [dataInicio, dataFim]); 
+  }, [dataInicio, dataFim]);
+
+  // Função para exportar a tabela para XLSX
+  const exportTableToXLSX = () => {
+
+    const dadosFormatados = agendamentos.map((agendamentos) => ({
+      Municipe: agendamentos.municipe,
+      Data: agendamentos.datainicio,  
+      Processo: agendamentos.processo,      
+      Tecnico: agendamentos.tecnico,
+      Coordenadoria: agendamentos.coordenadoria,
+      Motivo: agendamentos.motivo,
+    }))    
+    // Cria uma nova planilha com os dados da tabela
+    const worksheet = XLSX.utils.json_to_sheet(dadosFormatados);
+
+    // Cria um novo workbook e adiciona a planilha
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Agendamentos");
+
+    // Gera o arquivo XLSX e faz o download
+    XLSX.writeFile(workbook, "agendamentos.xlsx");
+  };
 
   return (
-    <Content titulo="Lista de Agendamentos" pagina="/lista-de-agendamentos">      
+    <Content titulo="Lista de Agendamentos" pagina="/lista-de-agendamentos">
+      {/* Botão de Download XLSX */}
       <Box
         sx={{
           display: "flex",
@@ -46,23 +71,26 @@ export default function ListaDeAgendamentos() {
         }}
       >
         <Button
-          color="primary"
+          color="success"
           size="sm"
           startDecorator={<DownloadRoundedIcon />}
+          onClick={exportTableToXLSX} // Adiciona a função ao botão
         >
-          Download PDF
+          Download XLSX
         </Button>
-      </Box>      
+      </Box>
+
+      {/* DatePickers para seleção de datas */}
       <Box
         sx={{
           display: "flex",
           justifyContent: "left",
-          gap: 2, 
-          mb: 2, 
+          gap: 2,
+          mb: 2,
         }}
       >
         <FormControl size="sm">
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
             <DatePicker
               label="Data Início"
               value={dataInicio}
@@ -73,7 +101,7 @@ export default function ListaDeAgendamentos() {
         </FormControl>
 
         <FormControl size="sm">
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
             <DatePicker
               label="Data Fim"
               value={dataFim}
