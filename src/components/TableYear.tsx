@@ -1,20 +1,34 @@
 import * as React from "react";
 import Table from "@mui/joy/Table";
-import { Box, Typography, Card } from "@mui/joy";
+import {
+  Box,
+  Typography,
+  Card,
+  Button,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  SvgIcon,
+} from "@mui/joy";
 import { getAgendamentosPorAno } from "@/shared/services/agendamentos.services";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 export default function TabelaAno({ ano }: { ano: number }) {
   const [dados, setDados] = React.useState<
     { coordenadoria: string; meses: number[]; total: number }[]
   >([]);
   const [totalAno, setTotalAno] = React.useState<number>(0);
+  const [totalMensal, setTotalMensal] = React.useState<number[]>(
+    Array(12).fill(0)
+  );
 
   React.useEffect(() => {
     async function fetchDados() {
       try {
         const data = await getAgendamentosPorAno(ano);
-        setDados(data.resultados); // Corrigido: acessando data.resultados
+        setDados(data.resultados);
         setTotalAno(data.totalAno);
+        setTotalMensal(data.totalMensal);
       } catch (error) {
         console.error("Erro ao buscar agendamentos:", error);
       }
@@ -24,13 +38,30 @@ export default function TabelaAno({ ano }: { ano: number }) {
 
   return (
     <Box sx={{ width: "100%", mt: 2 }}>
-      {/* Card com total anual */}
-      <Card variant="outlined" sx={{ mb: 2, p: 2, textAlign: "center" }}>
-        <Typography level="h4">
-          Total de Agendamentos em {ano}: {totalAno}
-        </Typography>
-      </Card>
-     
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: 500,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+          gap: 2,
+        }}
+      >
+        <Card variant="solid" color="primary" invertedColors>
+          <CardContent orientation="horizontal">
+            <CircularProgress size="lg" determinate value={20}>
+              <SvgIcon>
+                <CalendarMonthIcon />
+              </SvgIcon>
+            </CircularProgress>
+            <CardContent>
+              <Typography level="body-md">Total {ano}</Typography>
+              <Typography level="h2">{totalAno}</Typography>
+            </CardContent>
+          </CardContent>
+        </Card>
+      </Box>
+
       <Table borderAxis="both">
         <caption>Agendamentos Técnicos - {ano}</caption>
         <thead>
@@ -48,22 +79,32 @@ export default function TabelaAno({ ano }: { ano: number }) {
             <th>Out</th>
             <th>Nov</th>
             <th>Dez</th>
-            <th>Total</th>
+            <th>Total Ano</th>
           </tr>
         </thead>
         <tbody>
           {dados.length > 0 ? (
-            dados.map(({ coordenadoria, meses, total }) => (
-              <tr key={coordenadoria}>
-                <td>{coordenadoria}</td>
-                {meses.map((qtd, index) => (
+            <>
+              {dados.map(({ coordenadoria, meses, total }) => (
+                <tr key={coordenadoria}>
+                  <td>{coordenadoria}</td>
+                  {meses.map((qtd, index) => (
+                    <td key={index}>{qtd}</td>
+                  ))}
+                  <td>
+                    <strong>{total}</strong>
+                  </td>
+                </tr>
+              ))}
+
+              <tr style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}>
+                <td>Total Mensal</td>
+                {totalMensal.map((qtd, index) => (
                   <td key={index}>{qtd}</td>
                 ))}
-                <td>
-                  <strong>{total}</strong> {/* Total por coordenadoria */}
-                </td>
+                <td>{totalAno}</td>
               </tr>
-            ))
+            </>
           ) : (
             <tr>
               <td colSpan={14}>Carregando...</td>

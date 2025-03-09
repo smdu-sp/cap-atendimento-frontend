@@ -19,8 +19,6 @@ export default function ListaDeAgendamentos() {
   const [dataInicio, setDataInicio] = useState<Date | null>(new Date());
   const [dataFim, setDataFim] = useState<Date | null>(new Date());
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,9 +35,8 @@ export default function ListaDeAgendamentos() {
 
     fetchData();
   }, [dataInicio, dataFim]);
-
-  // Função para exportar a tabela para XLSX
-  const exportTableToXLSX = () => {
+ 
+  const exportTableToXLSX: () => void = () => {
 
     const dadosFormatados = agendamentos.map((agendamentos) => ({
       Municipe: agendamentos.municipe,
@@ -49,20 +46,17 @@ export default function ListaDeAgendamentos() {
       Coordenadoria: agendamentos.coordenadoria,
       Motivo: agendamentos.motivo,
     }))    
-    // Cria uma nova planilha com os dados da tabela
+
     const worksheet = XLSX.utils.json_to_sheet(dadosFormatados);
 
-    // Cria um novo workbook e adiciona a planilha
-    const workbook = XLSX.utils.book_new();
+      const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Agendamentos");
-
-    // Gera o arquivo XLSX e faz o download
+   
     XLSX.writeFile(workbook, "agendamentos.xlsx");
   };
 
   return (
-    <Content titulo="Lista de Agendamentos" pagina="/lista-de-agendamentos">
-      {/* Botão de Download XLSX */}
+    <Content titulo="Lista de Agendamentos" pagina="/lista-de-agendamentos">      
       <Box
         sx={{
           display: "flex",
@@ -74,13 +68,12 @@ export default function ListaDeAgendamentos() {
           color="success"
           size="sm"
           startDecorator={<DownloadRoundedIcon />}
-          onClick={exportTableToXLSX} // Adiciona a função ao botão
+          onClick={exportTableToXLSX}
         >
           Download XLSX
         </Button>
       </Box>
-
-      {/* DatePickers para seleção de datas */}
+      
       <Box
         sx={{
           display: "flex",
