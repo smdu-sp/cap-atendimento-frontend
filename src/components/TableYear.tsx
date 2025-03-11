@@ -1,7 +1,6 @@
 import * as React from "react";
 import Table from "@mui/joy/Table";
 import {
-  Box,
   Typography,
   Card,
   Button,
@@ -12,8 +11,15 @@ import {
 } from "@mui/joy";
 import { getAgendamentosPorAno } from "@/shared/services/agendamentos.services";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { Box } from "@mui/material";
+import { forwardRef, useImperativeHandle } from "react";
 
-export default function TabelaAno({ ano }: { ano: number }) {
+const mesesNome = [
+  "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+  "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+];
+
+const TabelaAno = forwardRef(({ ano }: { ano: number }, ref) => {
   const [dados, setDados] = React.useState<
     { coordenadoria: string; meses: number[]; total: number }[]
   >([]);
@@ -35,6 +41,17 @@ export default function TabelaAno({ ano }: { ano: number }) {
     }
     fetchDados();
   }, [ano]);
+
+  // Expondo os dados para o componente pai
+  useImperativeHandle(ref, () => ({
+    getDados: () => dados.map(({ coordenadoria, meses, total }) => ({
+      coordenadoria,
+      ...meses.reduce((acc, qtd, index) => {       
+        acc[mesesNome[index]] = qtd;
+        return acc;
+      }, { total }),
+    }))
+  }));
 
   return (
     <Box sx={{ width: "100%", mt: 2 }}>
@@ -114,4 +131,8 @@ export default function TabelaAno({ ano }: { ano: number }) {
       </Table>
     </Box>
   );
-}
+});
+
+TabelaAno.displayName = "TabelaAno"; 
+
+export default TabelaAno;

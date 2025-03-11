@@ -1,5 +1,4 @@
-import { FileUpload, ListAlt, CalendarMonth, Home, Person } from '@mui/icons-material';
-import { List } from '@mui/material';
+import { FileUpload, ListAlt, CalendarMonth, Home, Person, DateRange } from '@mui/icons-material';
 
 export interface IMenuOption {
     title:  string;
@@ -29,11 +28,17 @@ export const menu: IMenu = {
             icon: CalendarMonth,
         },
         {
+            title: 'Agendamentos por período',
+            href: '/agendamentos-por-periodo',
+            name: 'agendamentos-por-periodo',
+            icon: DateRange,
+        },
+        {
             title: 'Lista de Agendamentos',
             href: '/lista-de-agendamentos',
             name: 'lista-de-agendamentos',
             icon: ListAlt,
-        }
+        },
     ],
     adminOptions: [
         {
