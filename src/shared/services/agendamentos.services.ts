@@ -99,4 +99,40 @@ async function getListaAgendamentos(datainicio: Date, datafim: Date) {
   }
 }
 
-export { upload, getAgendamentosPorAno, getListaAgendamentos};
+  async function getContagemAgendamentos(datainicio: Date, datafim: Date) {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      Logout();
+      return { total: 0, porCoordenadoria: {} };
+    }
+  
+    try {
+      const response = await fetch(
+        `${baseURL}agendamentos/contagem?dataInicio=${datainicio}&dataFim=${datafim}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (response.status === 401) {
+        Logout();
+        return { total: 0, porCoordenadoria: {} };
+      }
+  
+      if (!response.ok) {
+        console.error("Erro ao buscar contagem de agendamentos:", await response.text());
+        return { total: 0, porCoordenadoria: {} };
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+      return { total: 0, porCoordenadoria: {} };
+    }  
+}
+export { upload, getAgendamentosPorAno, getListaAgendamentos, getContagemAgendamentos};

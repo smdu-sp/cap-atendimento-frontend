@@ -72,8 +72,7 @@ export default function ListaDeAgendamentos() {
         >
           Download XLSX
         </Button>
-      </Box>
-      
+      </Box>      
       <Box
         sx={{
           display: "flex",
@@ -92,7 +91,6 @@ export default function ListaDeAgendamentos() {
             />
           </LocalizationProvider>
         </FormControl>
-
         <FormControl size="sm">
           <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
             <DatePicker
@@ -103,9 +101,7 @@ export default function ListaDeAgendamentos() {
             />
           </LocalizationProvider>
         </FormControl>
-      </Box>
-
-      {/* Tabela de Agendamentos */}
+      </Box>      
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {loading ? <p>Carregando...</p> : <TabelaLista data={agendamentos} />}
       </Box>
